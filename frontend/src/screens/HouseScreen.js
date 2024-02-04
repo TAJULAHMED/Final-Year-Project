@@ -3,6 +3,7 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import { Container, Row, Col, Card, ListGroup, Carousel, Button, Modal, Form } from 'react-bootstrap';
 import MortgageCalculator from "../components/MortgageCalculator";
+import PredPrices from "../components/PredPrices";
 
 function HouseScreen() {
     const { slug } = useParams();
@@ -13,6 +14,8 @@ function HouseScreen() {
     const [sellerEmail, setSellerEmail] = useState([])
     const [showFullDescription, setShowFullDescription] = useState(false);
     const [isFav, setIsFav] = useState(true);
+    const [apiCallCompleted, setApiCallCompleted] = useState(false);
+
     
     const toggleDescription = () => {
         setShowFullDescription(!showFullDescription);
@@ -113,6 +116,8 @@ function HouseScreen() {
                 setSellerEmail(data.original_listing_person_email)
                 setIsFav(data.is_fav)
                 console.log(data)
+                setApiCallCompleted(true);
+
             } catch (error) {
                 console.error('Error fetching the house details:', error);
             }
@@ -240,6 +245,14 @@ function HouseScreen() {
             <Row>
                 <MortgageCalculator />
             </Row>
+
+            {apiCallCompleted && house.pred_prices && Object.keys(house.pred_prices).length > 0 && (
+                <Card className="mt-4 p-4">
+                    <Row>
+                        <PredPrices predPrices={house.pred_prices} price={house.price}/>
+                    </Row>
+                </Card>
+            )}
         </Container>
 
     );

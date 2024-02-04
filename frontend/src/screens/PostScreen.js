@@ -18,6 +18,10 @@ function PostScreen() {
     const userInfo = JSON.parse(localStorage.getItem('accessToken'));
     const navigate = useNavigate();
 
+    const getStyle = index => ({
+        backgroundColor: index % 2 === 0 ? '#f8f9fa' : '#e2e3e5'
+    });
+
     useEffect(() => {
         fetchPostAndReplies();
     }, [postId]);
@@ -48,7 +52,7 @@ function PostScreen() {
         try {
             await axios.post(`http://localhost:8000/api/forum/${postId}/replies/`, { content: newReplyContent }, config);
             setNewReplyContent('');
-            fetchPostAndReplies(); // Refresh post details and replies
+            fetchPostAndReplies(); 
         } catch (error) {
             console.error('Error submitting reply:', error);
         }
@@ -57,7 +61,7 @@ function PostScreen() {
     return (
         <Container className="mt-5">
             <Button variant="primary" onClick={() => navigate(-1)}>Back to Forum</Button>
-            <Card className="mt-3">
+            <Card className="mt-3" style={{ backgroundColor: '#f8f9fa' }}>
                 <Card.Body>
                     <Card.Title>{post.title}</Card.Title>
                     <Card.Text>{post.content}</Card.Text>
@@ -66,8 +70,8 @@ function PostScreen() {
 
             <h3 className="mt-4">Replies</h3>
             <ListGroup>
-                {replies.map(reply => (
-                    <ListGroup.Item key={reply.id}>
+                {replies.map((reply, index) => (
+                    <ListGroup.Item key={reply.id} style={getStyle(index)}>
                         {reply.content}
                         <br />
                         <small className="text-muted">Updated at: {formatTimestamp(reply.updated_at)}</small>

@@ -25,6 +25,11 @@ function App() {
         <Route path='/test' element={<ForumScreen />} />
 
         <Route 
+          path='/search' 
+          element={<ProtectedRoute><SearchScreen /></ProtectedRoute>} 
+        />
+
+        <Route 
           path='/editprofile' 
           element={<ProtectedRoute><EditProfileScreen /></ProtectedRoute>} 
         />

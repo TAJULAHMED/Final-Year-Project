@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Container, Form, Row, Col, Button, Card } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
 function SearchScreen() {
     const [formData, setFormData] = useState({
@@ -134,7 +135,11 @@ function SearchScreen() {
                 </Row>
                 <Row className="mb-3">
                     <Col className="d-flex justify-content-center">
-                        <Button variant="primary" type="submit" style={{ minWidth: '200px' }}>Search</Button>
+                        <Button className='me-2' variant="primary" type="submit">Search</Button>
+                        <Link to='/'>
+                            <Button>Go to Home</Button>
+                        </Link>
+
                     </Col>
                 </Row>
             </Form>
@@ -146,7 +151,6 @@ function SearchScreen() {
                         <Card>
                             <Card.Body>
                                 <Card.Title>{listing.title}</Card.Title>
-                                {/* Additional details here */}
                             </Card.Body>
                         </Card>
                     </Col>
