@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { Container, Row, Col, Card, ListGroup, Carousel, Button, Modal, Form } from 'react-bootstrap';
+import { FaBed, FaBath } from 'react-icons/fa';
 import MortgageCalculator from "../components/MortgageCalculator";
 import PredPrices from "../components/PredPrices";
 
@@ -160,13 +161,12 @@ function HouseScreen() {
                     <Card>
                     <ListGroup className="list-group-flush p-3">
                         {/* Larger font for very important details */}
-                        <ListGroup.Item style={{ fontSize: '1.2em' }}>Address: {house.address}</ListGroup.Item>
+                        <ListGroup.Item className="h3">{house.address}</ListGroup.Item>
                         <ListGroup.Item style={{ fontSize: '1.2em' }}>City: {house.city}</ListGroup.Item>
 
                         {/* Regular font for important, but less critical details */}
                         <ListGroup.Item>Borough: {house.borough}</ListGroup.Item>
                         <ListGroup.Item>Postcode: {house.postcode}</ListGroup.Item>
-                        <ListGroup.Item>Listed by: IDK WHOEVER OWNS THE HOUSE</ListGroup.Item>
 
 
                         {/* Slightly larger font for key features */}
@@ -176,19 +176,18 @@ function HouseScreen() {
                         <ListGroup.Item className="d-flex justify-content-between align-items-center">
                         <   div>
                                 <small className="text-muted">LISTING TYPE</small>
-                                <div>{house.listing_type}</div>
-                            </div>
+                                <div style={{ color: 'CornflowerBlue' }}>{house.listing_type}</div>                            </div>
                             <div>
                                 <small className="text-muted">BEDROOMS</small>
-                                <div><i className="bi bi-person"></i> x{house.bedrooms}</div>
+                                <div><FaBed style={{ color: 'CornflowerBlue' }} /> x{house.bedrooms}</div> {/* Include bedroom icon */}
                             </div>
                             <div>
                                 <small className="text-muted">BATHROOMS</small>
-                                <div><i className="bi bi-droplet"></i> x{house.bathrooms}</div>
+                                <div><FaBath style={{ color: 'CornflowerBlue' }} /> x{house.bathrooms}</div> {/* Include bathroom icon */}
                             </div>
                             <div>
                                 <small className="text-muted">TENURE</small>
-                                <div>Freehold <i className="bi bi-info-circle"></i></div>
+                                <div style={{ color: 'CornflowerBlue' }}>Freehold <i className="bi bi-info-circle"></i></div>
                             </div>
                         </ListGroup.Item>
 

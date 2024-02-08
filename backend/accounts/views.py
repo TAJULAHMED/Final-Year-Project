@@ -34,9 +34,10 @@ class UpdateUserProfile(APIView):
     def post(self, request):
         user = request.user
         data = request.data
+        print(data)
 
         # Updating password
-        if 'current_password' in data and 'new_password' in data:
+        if data['current_password'] != '' and  data['new_password'] != '':
             current_password = data['current_password']
             new_password = data['new_password']
             confirm_password = data.get('confirm_password', '')
@@ -56,7 +57,13 @@ class UpdateUserProfile(APIView):
             user.set_password(new_password)
             user.save()
             return Response({'success': 'Password updated successfully'})
-
+        
+        if 'name' in data:
+            user.name = data['name']
+            user.save()
+            print(user)
+            return Response({'success': 'Name changed successfully'}) 
+        
         # Update other user information
         serializer = UserAccountSerializer(user, data=data, partial=True)
         if serializer.is_valid():

@@ -1,12 +1,11 @@
 from decimal import ROUND_HALF_UP, Decimal
-import re
-import requests
+import re, requests, math
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework import permissions
-from .models import Listing, Favourite, Station, Line
-from .serializers import ListingSerializer, ListingDetailSerializer, NewFavSerializer, FavouriteItemSerializer
+from .models import Listing, Favourite, Station, Line, InvestmentPreference
+from .serializers import InvestmentPreferenceSerializer, ListingSerializer, ListingDetailSerializer, NewFavSerializer, FavouriteItemSerializer
 from datetime import datetime, timezone, timedelta
 from django.utils import timezone as django_timezone
 from rest_framework import status
@@ -61,24 +60,25 @@ class SearchView(APIView):
     def post(self, request, format=None):
         queryset = Listing.objects.order_by('-list_date').filter(is_published=True)
         data = self.request.data
+        print(data)
 
         listing_type = data['listing_type']
         queryset = queryset.filter(listing_type__iexact=listing_type)
 
         price = data['price']
-        if price == '£0+':
+        if price == '0':
             price = 0
-        elif price == '£200,000+':
+        elif price == '200000':
             price = 200000
-        elif price == '£400,000+':
+        elif price == '400000':
             price = 400000
-        elif price == '£600,000+':
+        elif price == '600000':
             price = 600000
-        elif price == '£800,000+':
+        elif price == '800000':
             price = 800000
-        elif price == '£1,000,000+':
+        elif price == '1000000':
             price = 1000000
-        elif price == '£1,500,000+':
+        elif price == '1500000':
             price = 1500000
         elif price == 'any':
             price = -1
@@ -135,8 +135,6 @@ class SearchView(APIView):
             list_date_datetime = datetime.combine(query.list_date, datetime.min.time(), tzinfo=django_timezone.utc)
             num_days = (datetime.now(timezone.utc) - list_date_datetime).days
 
-            #num_days = (datetime.now(timezone.utc) - query.list_date).days
-
             if days_passed != 0:
                 if num_days > days_passed:
                     slug = query.slug
@@ -144,15 +142,15 @@ class SearchView(APIView):
         
 
         has_photos = data['has_photos']
-        if has_photos == '1+':
+        if has_photos == '1':
             has_photos = 1
-        elif has_photos == '3+':
+        elif has_photos == '3':
             has_photos = 3
-        elif has_photos == '5+':
+        elif has_photos == '5':
             has_photos = 5
-        elif has_photos == '10+':
+        elif has_photos == '10':
             has_photos = 10
-        elif has_photos == '15+':
+        elif has_photos == '15':
             has_photos = 15
         
         for query in queryset:
@@ -187,6 +185,8 @@ class SearchView(APIView):
                 count += 1
             if query.photo_15:
                 count += 1
+
+            print(count, has_photos)
             
             if count < has_photos:
                 slug = query.slug
@@ -228,7 +228,6 @@ class NewListingView(APIView):
 
                 print(longitude, latitude, admin_district, admin_ward)
             else:
-                # Handle API errors or postcode not found
                 return Response({'error': 'Invalid postcode or API error'}, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -340,4 +339,89 @@ class NewListingView(APIView):
         else:
             print("Failed to retrieve data: Status code", response.status_code)
         return stations_with_lines
+
+
+def get_bounding_box(latitude, longitude, radius):
+    """
+    Calculate a bounding box around a point (latitude, longitude) within a given radius in miles
+    """
+
+    # Constants
+    miles_per_degree = Decimal('69.0')
+
+    # Calculate radians over the distance
+    radius_in_degrees = Decimal(radius) / miles_per_degree
+
+    # Convert latitude to Decimal for calculation
+    latitude = Decimal(latitude)
+    longitude = Decimal(longitude)
+
+    # Latitude: 1 degree = approx 69 miles
+    lat_min = latitude - radius_in_degrees
+    lat_max = latitude + radius_in_degrees
+
+    # Longitude: varies based on latitude
+    lon_min = longitude - radius_in_degrees / Decimal(math.cos(math.radians(float(latitude))))
+    lon_max = longitude + radius_in_degrees / Decimal(math.cos(math.radians(float(latitude))))
+
+    return (lat_min, lat_max, lon_min, lon_max)
+
+class PreferenceListings(APIView):
+    def get(self, request):
         
+        user = request.user
+        try:
+            preferences = InvestmentPreference.objects.get(user=user)
+        except InvestmentPreference.DoesNotExist:
+            return Response({'message': 'Investment preferences not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+        affordable_price = preferences.deposit + (preferences.annual_income * 5)
+        lat_min, lat_max, lon_min, lon_max = get_bounding_box(preferences.latitude, preferences.longitude, preferences.radius)
+        listings = Listing.objects.filter(
+            latitude__gte=lat_min,
+            latitude__lte=lat_max,
+            longitude__gte=lon_min,
+            longitude__lte=lon_max,
+            price__lte=affordable_price,
+        )
+
+        serializer = ListingSerializer(listings, many=True)
+        return Response(serializer.data)
+
+
+class PreferenceView(APIView): 
+    def get(self, request):
+        user = request.user
+        try:
+            preference = InvestmentPreference.objects.get(user=user)
+            serializer = InvestmentPreferenceSerializer(preference)
+            return Response(serializer.data)
+        except InvestmentPreference.DoesNotExist:
+            return Response({'message': 'No investment preferences found for the user.'}, status=status.HTTP_404_NOT_FOUND)
+
+
+    def post(self, request):
+        user = request.user
+        data = request.data
+
+        for key in data:
+            if data[key] == '':
+                return Response({'error': 'Fill in all the fields'}, status=status.HTTP_400_BAD_REQUEST)
+
+        preference, created = InvestmentPreference.objects.get_or_create(user=user)
+        serializer = InvestmentPreferenceSerializer(preference, data=data, partial=True)
+        
+        if serializer.is_valid():
+            validated_data = serializer.validated_data
+            print(validated_data)
+
+            validated_data['longitude'] = 0.1234
+            validated_data['latitude'] = 0.5678
+            serializer.save()
+
+            return Response({'success': 'successfully updated preferences'})
+        else:
+            return Response({'error': 'error, please make sure all fields are filled'})
+            
+
+

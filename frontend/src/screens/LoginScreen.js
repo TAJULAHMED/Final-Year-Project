@@ -1,7 +1,7 @@
 import React, { useState, useEffect} from "react";
 import { Link, redirect, useLocation, useNavigate } from 'react-router-dom'
 import { Form, Button, Row, Col, Card, Container } from 'react-bootstrap'
-import { login, logout } from "../reducers/UserReducers";
+import { login, logout, preferences } from "../reducers/UserReducers";
 import { useDispatch, useSelector } from 'react-redux';
 
 import axios from "axios";
@@ -21,17 +21,30 @@ function LoginScreen() {
         e.preventDefault()
         console.log("Submitted")
 
-        const config = {
-            headers:{
-                'Content-type' : 'application/json',
-            }
-        }
-
         try {
-            const { data } = await axios.post('http://localhost:8000/api/accounts/token/', {'email':email, 'password':password}, config)
+            const { data } = await axios.post('http://localhost:8000/api/accounts/token/', {'email':email, 'password':password})
             
             dispatch(login({ name: data.name, email: data.email, loggedIn: true, verified: data.verified}))
-        
+
+            localStorage.setItem('accessToken', JSON.stringify(data))
+            const userInfo = JSON.parse(localStorage.getItem('accessToken'));
+            const config = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${userInfo.access}`
+                }
+            };
+
+            const response = await axios.get('http://localhost:8000/api/listings/preferences/', config);
+            console.log(response.data); 
+
+            dispatch(preferences({
+                income: response.data.annual_income, 
+                age: response.data.age, 
+                radius: response.data.radius,
+                postcode: response.data.postcode,
+                deposit: response.data.deposit
+            }));
             localStorage.setItem('accessToken', JSON.stringify(data))
 
             navigate('/verify')

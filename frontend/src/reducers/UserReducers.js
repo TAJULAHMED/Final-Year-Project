@@ -1,7 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit"; 
 
-// Simplified initial state
-const initialState = { name: '', email: '', loggedIn: false, verified: false };
+const initialState = { name: '', email: '', loggedIn: false, verified: false, income: null, age: null, postcode: null, radius: null, deposit: null};
 
 export const userSlice = createSlice({
     name: 'user',
@@ -26,11 +25,18 @@ export const userSlice = createSlice({
         },
         namechange: (state, action) => {
             state.name = action.payload.name;
+        },
+        preferences: (state, action) => {
+            state.income = action.payload.income
+            state.age = action.payload.age
+            state.postcode = action.payload.postcode
+            state.radius = action.payload.radius
+            state.deposit = action.payload.deposit
         }
 
     }
 });
 
-export const { login, logout, verified, namechange } = userSlice.actions;
+export const { login, logout, verified, namechange, preferences } = userSlice.actions;
 
 export default userSlice.reducer;

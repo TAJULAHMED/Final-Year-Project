@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Listing, Favourite, Station, Line
+from .models import Listing, Favourite, Station, Line, InvestmentPreference
 
 class ListingAdmin(admin.ModelAdmin):
     list_display = ('id', 'title', 'is_published', 'price', 'list_date', 'realtor')
@@ -13,3 +13,4 @@ admin.site.register(Listing, ListingAdmin)
 admin.site.register(Favourite)
 admin.site.register(Station)
 admin.site.register(Line)
+admin.site.register(InvestmentPreference)

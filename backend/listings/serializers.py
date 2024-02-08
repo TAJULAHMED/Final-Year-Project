@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Listing, Favourite, Station
+from .models import Listing, Favourite, Station, InvestmentPreference
 
 class StationSerializer(serializers.ModelSerializer):
     class Meta:
@@ -41,3 +41,8 @@ class NewFavSerializer(serializers.ModelSerializer):
     class Meta:
         model = Favourite
         fields = ['listing']
+
+class InvestmentPreferenceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = InvestmentPreference
+        fields = ['age', 'deposit', 'annual_income', 'radius', 'postcode']

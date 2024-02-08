@@ -2,19 +2,22 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Container, Form, Row, Col, Button, Card } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import House from "../components/House";
+
 
 function SearchScreen() {
     const [formData, setFormData] = useState({
         listing_type: 'Terraced',
         price: 'any',
-        bedrooms: '5+',
-        bathrooms: '4+',
+        bedrooms: '0+',
+        bathrooms: '0+',
         days_listed: 'any',
-        has_photos: '1+',
+        has_photos: '1',
         open_house: false,
         keywords: ''
     });
     const [listings, setListings] = useState([]);
+    const [houses, setHouses] = useState([]);
 
     const userInfo = JSON.parse(localStorage.getItem('accessToken'))    
     const config = {
@@ -39,6 +42,7 @@ function SearchScreen() {
             setListings(response.data); // Assuming the response data is the list of listings
             console.log(formData)
             console.log(response.data)
+            setHouses(response.data)
         } catch (error) {
             console.error('Error fetching search results:', error);
         }
@@ -123,7 +127,7 @@ function SearchScreen() {
                             placeholder="Keywords"
                         />
                     </Col>
-                    <Col xs={4} className="d-flex align-items-center">
+                    <Col xs={4} className="d-flex align-items-center mt-2">
                         <Form.Check
                             type="checkbox"
                             name="open_house"
@@ -136,23 +140,26 @@ function SearchScreen() {
                 <Row className="mb-3">
                     <Col className="d-flex justify-content-center">
                         <Button className='me-2' variant="primary" type="submit">Search</Button>
-                        <Link to='/'>
-                            <Button>Go to Home</Button>
+                        <Link to='/all'>
+                            <Button>View All</Button>
                         </Link>
-
                     </Col>
                 </Row>
+
+                <Row className="mb-3">
+                    <Col className="d-flex justify-content-center">
+                    <Link to='/prefs'>
+                        <Button>Personalised investments for you</Button>
+                    </Link>
+                    </Col>
+                </Row>
+
             </Form>
 
-            {/* Display the search results */}
-            <Row className="mt-3">
-                {listings.map(listing => (
-                    <Col key={listing.id} md={4} className="mb-3">
-                        <Card>
-                            <Card.Body>
-                                <Card.Title>{listing.title}</Card.Title>
-                            </Card.Body>
-                        </Card>
+            <Row>
+                {houses.map(house => (
+                    <Col key={house.id} sm={12} md={12} lg={4} xl={7}>
+                        <House house={house} />
                     </Col>
                 ))}
             </Row>

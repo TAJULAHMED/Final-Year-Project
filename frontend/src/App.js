@@ -15,14 +15,24 @@ import VerifyScreen from './screens/VerifyScreen';
 import ForumScreen from './screens/ForumScreen';
 import PostScreen from './screens/PostScreen';
 import EditProfileScreen from './screens/EditProfileScreen';
+import HomePage from './screens/HomePage';
+import PersonalisedListingsScreen from './screens/PersonalisedListingsScreen';
 
 function App() {
   return (
     <Router>
       <Header />
       <Routes>
-        <Route path='/' element={<HomeScreen />} />
+      <Route path='/' element={<HomePage />} />
+
+
+        <Route path='/all' element={<HomeScreen />} />
         <Route path='/test' element={<ForumScreen />} />
+
+        <Route 
+          path='/prefs' 
+          element={<ProtectedRoute><PersonalisedListingsScreen /></ProtectedRoute>} 
+        />
 
         <Route 
           path='/search' 

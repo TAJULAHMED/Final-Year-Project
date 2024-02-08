@@ -92,7 +92,6 @@ new_house_data = {
     'Type_Flat': [0],                 # 1 if Flat, 0 otherwise
     'Type_Semi Detached': [0], # 1 if Semi Detached, 0 otherwise
     'Type_Terraced': [1],         # 1 if Terraced, 0 otherwise
-    #'Days Since Sale': [10618]      # Replace with the actual days since sale value
 }
 
 def make_prediction(new_house_data):
