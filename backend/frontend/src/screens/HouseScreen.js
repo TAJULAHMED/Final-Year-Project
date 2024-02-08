@@ -5,6 +5,8 @@ import { Container, Row, Col, Card, ListGroup, Carousel, Button, Modal, Form } f
 import { FaBed, FaBath } from 'react-icons/fa';
 import MortgageCalculator from "../components/MortgageCalculator";
 import PredPrices from "../components/PredPrices";
+import { useSelector, useDispatch } from 'react-redux';
+
 
 function HouseScreen() {
     const { slug } = useParams();
@@ -16,6 +18,9 @@ function HouseScreen() {
     const [showFullDescription, setShowFullDescription] = useState(false);
     const [isFav, setIsFav] = useState(true);
     const [apiCallCompleted, setApiCallCompleted] = useState(false);
+
+    const user = useSelector((state) => state.user);
+
 
     
     const toggleDescription = () => {
@@ -69,12 +74,11 @@ function HouseScreen() {
     const handleClose = () => setShowModal(false);
     const handleShow = () => setShowModal(true);
 
-    const userInfo = JSON.parse(localStorage.getItem('accessToken'))  
     const config = {
         headers: {
-            'Content-type': 'application/json',
-            Authorization: `Bearer ${userInfo.access}`
-        }
+            'Content-Type': 'application/json',
+        }, 
+        withCredentials: true
     };
 
     const handleFav = async () => {
@@ -101,8 +105,8 @@ function HouseScreen() {
         {
             'subject': subject,
             'message': sendMessage,
-            'email': userInfo.email,
-            'name': userInfo.name,
+            'email': user.email,
+            'name': user.name,
             'seller_email': sellerEmail
 
         }, config)

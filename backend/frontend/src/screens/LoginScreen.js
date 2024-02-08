@@ -26,17 +26,17 @@ function LoginScreen() {
             
             dispatch(login({ name: data.name, email: data.email, loggedIn: true, verified: data.verified}))
 
-            localStorage.setItem('accessToken', JSON.stringify(data))
-            const userInfo = JSON.parse(localStorage.getItem('accessToken'));
             const config = {
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: `Bearer ${userInfo.access}`
-                }
+                    //Authorization: `Bearer ${userInfo.access}`
+                }, 
+                withCredentials: true
             };
 
             const response = await axios.get('http://localhost:8000/api/listings/preferences/', config);
             console.log(response.data); 
+            console.log('This is working')
 
             dispatch(preferences({
                 income: response.data.annual_income, 
@@ -45,7 +45,6 @@ function LoginScreen() {
                 postcode: response.data.postcode,
                 deposit: response.data.deposit
             }));
-            localStorage.setItem('accessToken', JSON.stringify(data))
 
             navigate('/verify')
         }

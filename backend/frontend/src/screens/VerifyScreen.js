@@ -14,9 +14,9 @@ function VerifyScreen() {
     const userInfo = JSON.parse(localStorage.getItem('accessToken'));
     const config = {
         headers: {
-            'Content-type': 'application/json',
-            Authorization: `Bearer ${userInfo.access}`
-        }
+            'Content-Type': 'application/json',
+        }, 
+        withCredentials: true
     };
 
     const handleSubmit = async (event) => {

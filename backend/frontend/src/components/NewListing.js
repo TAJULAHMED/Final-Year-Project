@@ -27,9 +27,9 @@ function NewListing() {
     const userInfo = JSON.parse(localStorage.getItem('accessToken'));
     const config = {
         headers: {
-            'Content-type': 'multipart/form-data',
-            Authorization: `Bearer ${userInfo.access}`
-        }
+            'Content-Type': 'application/json',
+        }, 
+        withCredentials: true
     };
 
     const handleChange = (e) => {

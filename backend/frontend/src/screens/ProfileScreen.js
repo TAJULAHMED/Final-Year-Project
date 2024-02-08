@@ -11,9 +11,9 @@ function ProfileScreen() {
 
     const config = {
         headers: {
-            'Content-type': 'application/json',
-            Authorization: `Bearer ${userInfo.access}`
-        }
+            'Content-Type': 'application/json',
+        }, 
+        withCredentials: true
     };
 
     useEffect(() => {

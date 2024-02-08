@@ -74,3 +74,18 @@ class UpdateUserProfile(APIView):
     
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
+
+    def post(self, request, *args, **kwargs):
+        response = super().post(request, *args, **kwargs)
+        if 'access' in response.data and 'refresh' in response.data:
+            # Set the access token in a cookie
+            response.set_cookie(
+                'access_token',
+                response.data['access'],
+                httponly=True,
+                max_age=24*3600,  # 24 hours
+                samesite='Lax',
+                secure=False
+            )
+
+        return response

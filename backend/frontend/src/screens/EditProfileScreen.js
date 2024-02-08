@@ -31,9 +31,7 @@ function EditProfileScreen() {
     const user = useSelector((state) => state.user);
 
     useEffect(() => {
-        if (userInfo && userInfo.name) {
-            setName(userInfo.name);
-        }
+        setName(user.name || '')
         setAnnualIncome(user.income || '');
         setAge(user.age ? user.age.toString() : '');
         setPostcode(user.postcode || '');
@@ -44,8 +42,8 @@ function EditProfileScreen() {
     const config = {
         headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${userInfo.access}`
-        }
+        }, 
+        withCredentials: true
     };
 
     const submitHandler = async (e) => {

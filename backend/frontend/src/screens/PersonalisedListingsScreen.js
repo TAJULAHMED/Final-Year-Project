@@ -9,13 +9,12 @@ function PersonalisedListingsScreen() {
     useEffect(() => {
         fetchHouses();
     }, []); 
-    const userInfo = JSON.parse(localStorage.getItem('accessToken'))
     const config = {
         headers: {
-            'Content-type': 'application/json',
-            Authorization: `Bearer ${userInfo.access}`
-        }
-    }
+            'Content-Type': 'application/json',
+        }, 
+        withCredentials: true
+    };
 
     async function fetchHouses() {
         try {

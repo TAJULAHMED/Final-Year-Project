@@ -11,17 +11,19 @@ function ForumScreen() {
     const userInfo = JSON.parse(localStorage.getItem('accessToken'));
     const navigate = useNavigate();
 
+    const config = {
+        headers: {
+            'Content-Type': 'application/json',
+        }, 
+        withCredentials: true
+    };
+
     useEffect(() => {
         fetchPosts();
     }, []);
 
     const fetchPosts = async () => {
         try {
-            const config = {
-                headers: {
-                    Authorization: `Bearer ${userInfo.access}`
-                }
-            };
             const response = await axios.get('http://localhost:8000/api/forum/', config);
             setPosts(response.data);
             console.log(posts)
@@ -37,12 +39,6 @@ function ForumScreen() {
     const handlePostSubmit = async (e) => {
         e.preventDefault();
         try {
-            const config = {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${userInfo.access}`
-                }
-            };
             const response = await axios.post('http://localhost:8000/api/forum/', newPost, config);
             setPosts([...posts, response.data]);
             setNewPost({ title: '', content: '' }); 

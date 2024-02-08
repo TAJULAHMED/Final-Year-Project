@@ -22,10 +22,11 @@ function SearchScreen() {
     const userInfo = JSON.parse(localStorage.getItem('accessToken'))    
     const config = {
         headers: {
-            'Content-type': 'application/json',
-            Authorization: `Bearer ${userInfo.access}`
-        }
-    }
+            'Content-Type': 'application/json',
+        }, 
+        withCredentials: true
+    };
+
 
     const handleChange = (e) => {
         const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;

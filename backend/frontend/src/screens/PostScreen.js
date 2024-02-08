@@ -29,8 +29,8 @@ function PostScreen() {
     const config = {
         headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${userInfo.access}`
-        }
+        }, 
+        withCredentials: true
     };
 
     const fetchPostAndReplies = async () => {
