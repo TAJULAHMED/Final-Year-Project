@@ -30,9 +30,9 @@ const HomePage = () => {
                     <Col md={4}>
                         <Card>
                             <Card.Body>
-                                <Card.Title>Market Analysis</Card.Title>
+                                <Card.Title>Price prediction</Card.Title>
                                 <Card.Text>
-                                    Get real-time market data and trends to make informed decisions quickly.
+                                    Leverage advanced price prediction models to accurately forecast market trends and prices.
                                 </Card.Text>
                             </Card.Body>
                         </Card>
@@ -50,9 +50,9 @@ const HomePage = () => {
                     <Col md={4}>
                         <Card>
                             <Card.Body>
-                                <Card.Title>Investment Tracking</Card.Title>
+                                <Card.Title>Property Tracking</Card.Title>
                                 <Card.Text>
-                                    Monitor your investment portfolio and track growth over time with ease.
+                                    Monitor and compare your favourite properties to ensure the best investment choice for you.
                                 </Card.Text>
                             </Card.Body>
                         </Card>

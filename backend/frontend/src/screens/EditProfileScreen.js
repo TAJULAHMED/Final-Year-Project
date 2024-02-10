@@ -21,13 +21,9 @@ function EditProfileScreen() {
     const [investmentError, setInvestmentError] = useState('');
     const [investmentSuccessMessage, setInvestmentSuccessMessage] = useState('');
     
-    
-    const [testInput, setTestInput] = useState('');
-
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const userInfo = JSON.parse(localStorage.getItem('accessToken')) || {};
     const user = useSelector((state) => state.user);
 
     useEffect(() => {
@@ -62,11 +58,11 @@ function EditProfileScreen() {
 
             dispatch(namechange({ name: name }));
             setSuccessMessage('Profile updated successfully.');
-            setError(''); // Clear any previous errors
+            setError('');
         } catch (error) {
             const errorMessage = error.response && error.response.data ? error.response.data.error : 'An error occurred while updating the profile. Please try again.';
             setError(errorMessage);
-            setSuccessMessage(''); // Clear any previous success messages
+            setSuccessMessage(''); 
         }
     };
 

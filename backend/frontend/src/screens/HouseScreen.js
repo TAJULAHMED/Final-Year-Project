@@ -6,6 +6,7 @@ import { FaBed, FaBath } from 'react-icons/fa';
 import MortgageCalculator from "../components/MortgageCalculator";
 import PredPrices from "../components/PredPrices";
 import { useSelector, useDispatch } from 'react-redux';
+import MapboxMap from "../components/MapboxMap";
 
 
 function HouseScreen() {
@@ -18,6 +19,8 @@ function HouseScreen() {
     const [showFullDescription, setShowFullDescription] = useState(false);
     const [isFav, setIsFav] = useState(true);
     const [apiCallCompleted, setApiCallCompleted] = useState(false);
+    const [showMapModal, setShowMapModal] = useState(false);
+
 
     const user = useSelector((state) => state.user);
 
@@ -48,7 +51,6 @@ function HouseScreen() {
             );
         }
     
-        // Nearby Stations
         if (house.nearby_stations && house.nearby_stations.length > 0) {
             const stationsList = (
                 <div style={{ marginTop: '20px' }}>
@@ -88,7 +90,6 @@ function HouseScreen() {
                 'listing': house.id
             }, config);
             
-            // Update isFav state based on the response
             if (response.data.message === 'Removed successfully') {
                 setIsFav(false);
             } else {
@@ -164,23 +165,20 @@ function HouseScreen() {
                 <Col lg={6} md={12}>
                     <Card>
                     <ListGroup className="list-group-flush p-3">
-                        {/* Larger font for very important details */}
                         <ListGroup.Item className="h3">{house.address}</ListGroup.Item>
                         <ListGroup.Item style={{ fontSize: '1.2em' }}>City: {house.city}</ListGroup.Item>
 
-                        {/* Regular font for important, but less critical details */}
                         <ListGroup.Item>Borough: {house.borough}</ListGroup.Item>
                         <ListGroup.Item>Postcode: {house.postcode}</ListGroup.Item>
 
-
-                        {/* Slightly larger font for key features */}
                         <ListGroup.Item style={{ fontSize: '1.1em' }}>Open House: {house.open_house ? 'Yes' : 'No'}</ListGroup.Item>
 
                         <br />
                         <ListGroup.Item className="d-flex justify-content-between align-items-center">
-                        <   div>
+                            <div>
                                 <small className="text-muted">LISTING TYPE</small>
-                                <div style={{ color: 'CornflowerBlue' }}>{house.listing_type}</div>                            </div>
+                                <div style={{ color: 'CornflowerBlue' }}>{house.listing_type}</div>                            
+                            </div>
                             <div>
                                 <small className="text-muted">BEDROOMS</small>
                                 <div><FaBed style={{ color: 'CornflowerBlue' }} /> x{house.bedrooms}</div> {/* Include bedroom icon */}
@@ -225,6 +223,25 @@ function HouseScreen() {
                                 </Button>
                             </Modal.Footer>
                         </Modal>
+                        <Button variant="info" onClick={() => setShowMapModal(true)}>Show Location on Map</Button>
+                        <Modal show={showMapModal} onHide={() => setShowMapModal(false)} size="lg" centered>
+                        <Modal.Header closeButton>
+                            <Modal.Title>House Location</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            {house.longitude && house.latitude ? (
+                            <MapboxMap longitude={parseFloat(house.longitude)} latitude={parseFloat(house.latitude)} />
+                            ) : (
+                                <p>Loading map...</p>
+                            )}
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="secondary" onClick={() => setShowMapModal(false)}>
+                                Close
+                            </Button>
+                        </Modal.Footer>
+                    </Modal>
+
                     
                     
                     </div>
