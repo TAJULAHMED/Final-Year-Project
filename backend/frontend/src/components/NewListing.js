@@ -18,17 +18,13 @@ function NewListing() {
         latitude: '',
         images: []
     });
-    const [photoMain, setPhotoMain] = useState(null); // Separate state for the main photo
+    const [photoMain, setPhotoMain] = useState(null); 
     const [message, setMessage] = useState('');
     const [isSuccess, setIsSuccess] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
 
-    const userInfo = JSON.parse(localStorage.getItem('accessToken'));
     const config = {
-        headers: {
-            'Content-Type': 'application/json',
-        }, 
         withCredentials: true
     };
 
@@ -41,7 +37,7 @@ function NewListing() {
     };
 
     const handleMainImageChange = (e) => {
-        setPhotoMain(e.target.files[0]); // Update the main photo
+        setPhotoMain(e.target.files[0]); 
     };
 
     const handleImageChange = (e) => {
@@ -63,7 +59,7 @@ function NewListing() {
         });
 
         if (photoMain) {
-            uploadFormData.append('photo_main', photoMain); // Append the main photo
+            uploadFormData.append('photo_main', photoMain);  
         }
 
         formData.images.forEach((image, index) => {

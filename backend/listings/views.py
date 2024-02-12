@@ -207,6 +207,7 @@ class SearchView(APIView):
 
 class NewListingView(APIView):
     def post(self, request):
+        print(request.data)
 
         print(request.FILES)
         data = request.data
