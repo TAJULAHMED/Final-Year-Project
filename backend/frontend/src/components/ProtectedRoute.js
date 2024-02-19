@@ -10,17 +10,14 @@ function ProtectedRoute({ children }) {
         return <Navigate to="/profile" replace />;
     }
 
-    // Redirect logged-in and verified users to the profile page
     if (user.loggedIn && user.verified && location.pathname !== '/profile') {
         return children;
     }
 
-    // Redirect users not logged in to the login page
     if (!user.loggedIn) {
         return <Navigate to="/login" replace />;
     }
 
-    // Redirect logged-in but not verified users to the verify page
     if (user.loggedIn && !user.verified && location.pathname !== '/verify') {
         return <Navigate to="/verify" replace />;
     }

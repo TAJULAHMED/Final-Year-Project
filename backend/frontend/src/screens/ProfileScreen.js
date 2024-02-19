@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Link, useParams } from "react-router-dom";
-import { Container, Row, Col, Card, ListGroup, Carousel, Button, Modal, Form } from 'react-bootstrap';
+import { Link } from "react-router-dom";
+import { Container, Row, Col, Button } from 'react-bootstrap';
 import Favourite from "../components/Favourite";
+import House from "../components/House";
+import { RiDeleteBin6Line } from "react-icons/ri";
 
 function ProfileScreen() {
-    const[favs, setFavs] = useState([]);
-    const userInfo = JSON.parse(localStorage.getItem('accessToken'))    
-
+    const [favs, setFavs] = useState([]);
+    const [userHouses, setUserHouses] = useState([]);
 
     const config = {
         headers: {
@@ -19,8 +20,12 @@ function ProfileScreen() {
     useEffect(() => {
         async function fetchFavs() {
             try {
-                const { data } = await axios.get(`http://localhost:8000/api/listings/favs/`, config); 
-                setFavs(data);
+                const { data: favsData } = await axios.get(`http://localhost:8000/api/listings/favs/`, config); 
+                setFavs(favsData);
+
+                const { data: housesData } = await axios.get(`http://localhost:8000/api/listings/user-listings/`, config);
+                setUserHouses(housesData);
+
             } catch (error) {
                 console.error('Error fetching the house details:', error);
             }
@@ -30,32 +35,47 @@ function ProfileScreen() {
     }, []); 
 
     return (
-        <div>
+        <>
+            <Container className="mt-3">
             <Row>
                 {favs.length > 0 && (
                     <>
                         <Col xs={12} className="mb-4">
-                            <h3 className="text-center fw-bold mt-4">Your Favourites</h3>
+                            <h3 className="text-center fw-bold mt-2">Your Favourites</h3>
                         </Col>
                         {favs.map(fav => (
-                            <Col key={fav.id} sm={12} md={12} lg={12} xl={12}>
+                            <Col key={fav.id} xs={12} sm={12} md={12} lg={12} xl={12}> 
                                 <Favourite fav={fav} />
                             </Col>
                         ))}
                     </>
                 )}
             </Row>
+            </Container>
+            <Container> 
             <Row>
                 <Col xs={12} className="mb-4">
-                    <h3 className="text-center fw-bold mt-4">Your Listings</h3>
+                    <h3 className="text-center fw-bold">Your Listings</h3>
                 </Col>
-                <Link to='/newlisting'>New Listing</Link>
+                {userHouses && userHouses.length > 0 && userHouses.map(house => (
+                    <Col key={house.id} xs={12} sm={6} md={4} lg={4} xl={4} className="position-relative"> {/* Adjust column sizing and ensure consistent layout */}
+                        <RiDeleteBin6Line
+                        className="delete-icon position-absolute top-0 end-0 m-2"
+                        style={{ cursor: 'pointer', zIndex: 1,  fontSize: '32px' }}
+                        />
+                        <House house={house} />
+                    </Col>
+                ))}
             </Row>
 
-
-        </div>
-        
-    )
+            <Row>
+                <Col className="text-center">
+                    <Button as={Link} to='/newlisting' variant="primary">New Listing</Button>
+                </Col>
+            </Row>
+            </Container>
+        </>
+    );
 }
 
-export default ProfileScreen
+export default ProfileScreen;

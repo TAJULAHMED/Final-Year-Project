@@ -209,7 +209,6 @@ class NewListingView(APIView):
     def post(self, request):
         print(request.data)
 
-        print(request.FILES)
         data = request.data
         slug = re.sub(r'\s+', '-', data.get('address', '')).lower()
         
@@ -254,8 +253,16 @@ class NewListingView(APIView):
                 new_house_data['Type_Flat'] = [1]
 
             pred = make_prediction(new_house_data)
-        
 
+        
+        print('this is open house', data.get('open_house'))
+        print(type(data.get('open_house')))
+        
+        open_house_value = data.get('open_house', 'false')
+        if open_house_value == 'true':
+            open_house_bool = True
+        else:
+            open_house_bool = False
 
 
         listing = Listing(
@@ -265,7 +272,6 @@ class NewListingView(APIView):
             title=data.get('address'),
             address=data.get('address'),
             city=data.get('city'),
-            #borough=data.get('borough'),
             borough=admin_district,
             postcode=data.get('postcode'),
             description=data.get('description'),
@@ -273,15 +279,12 @@ class NewListingView(APIView):
             price=data.get('price'),
             bedrooms=data.get('bedrooms'),
             bathrooms=data.get('bathrooms'),
-            open_house=data.get('open_house', False),
+            open_house=open_house_bool,
             longitude=longitude,
             latitude=latitude,
             pred_prices = pred,
-            #is_published=data.get('is_published', True),
-            #list_date=data.get('list_date'),
         )
 
-        # Handling photo fields
         photo_fields = ['photo_main', 'photo_1', 'photo_2', 'photo_3', 'photo_4', 'photo_5', 'photo_6', 'photo_7', 'photo_8', 'photo_9', 'photo_10', 'photo_11', 'photo_12', 'photo_13', 'photo_14', 'photo_15']
         for field in photo_fields:
             if field in data:
@@ -289,7 +292,6 @@ class NewListingView(APIView):
                 if hasattr(photo, 'read'):
                     setattr(listing, field, photo)
 
-        # Validate and save
         try:
             listing.full_clean()
             listing.save()
@@ -302,11 +304,9 @@ class NewListingView(APIView):
     def add_stations_to_listing(self, listing, latitude, longitude):
         stations_data = self.get_all_nearest_stations_with_lines(latitude, longitude)
 
-        print("Stations found:", len(stations_data))  # Debugging line
 
         for station_name, line_names in stations_data:
             station, created = Station.objects.get_or_create(name=station_name)
-            print("Processing station:", station_name)  # Debugging line
 
             for line_name in line_names:
                 line, _ = Line.objects.get_or_create(name=line_name)
@@ -314,12 +314,10 @@ class NewListingView(APIView):
 
             listing.nearby_stations.add(station)
 
-        # Check how many stations were linked
-        print("Linked stations count:", listing.nearby_stations.count())  # Debugging line
+        print("Linked stations count:", listing.nearby_stations.count())  
 
     
     def get_all_nearest_stations_with_lines(self, latitude, longitude, radius=1500):
-        # Your existing function to fetch station data from the TfL API
         url = "https://api.tfl.gov.uk/StopPoint"
         params = {
             "lat": latitude,
@@ -426,3 +424,8 @@ class PreferenceView(APIView):
             
 
 
+class UserListingsView(APIView):
+    def get(self, request):
+        listings = Listing.objects.filter(original_listing_person=request.user)
+        serializer = ListingSerializer(listings, many=True)
+        return Response(serializer.data)

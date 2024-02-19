@@ -6,6 +6,7 @@ from rest_framework import permissions, status
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .serializers import MyTokenObtainPairSerializer, UserAccountSerializer
 from django.contrib.auth.hashers import check_password
+from rest_framework.permissions import IsAuthenticated
 
 class SignupView(APIView):
     permission_classes = (permissions.AllowAny, )
@@ -36,21 +37,17 @@ class UpdateUserProfile(APIView):
         data = request.data
         print(data)
 
-        # Updating password
         if data['current_password'] != '' and  data['new_password'] != '':
             current_password = data['current_password']
             new_password = data['new_password']
             confirm_password = data.get('confirm_password', '')
 
-            # Check if new password and confirm password match
             if new_password != confirm_password:
                 return Response({'error': 'New password and confirm password do not match'}, status=status.HTTP_400_BAD_REQUEST)
 
-            # Verify current password
             if not check_password(current_password, user.password):
                 return Response({'error': 'Current password is incorrect'}, status=status.HTTP_400_BAD_REQUEST)
 
-            # Validate new password length
             if len(new_password) < 6:
                 return Response({'error': 'New password must be at least 6 characters long'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -64,7 +61,6 @@ class UpdateUserProfile(APIView):
             print(user)
             return Response({'success': 'Name changed successfully'}) 
         
-        # Update other user information
         serializer = UserAccountSerializer(user, data=data, partial=True)
         if serializer.is_valid():
             serializer.save()
@@ -78,7 +74,6 @@ class MyTokenObtainPairView(TokenObtainPairView):
     def post(self, request, *args, **kwargs):
         response = super().post(request, *args, **kwargs)
         if 'access' in response.data and 'refresh' in response.data:
-            # Set the access token in a cookie
             response.set_cookie(
                 'access_token',
                 response.data['access'],
@@ -89,3 +84,10 @@ class MyTokenObtainPairView(TokenObtainPairView):
             )
 
         return response
+
+class CheckSessionView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        return Response({'Active': True})
+

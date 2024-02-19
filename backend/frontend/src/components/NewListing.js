@@ -16,7 +16,8 @@ function NewListing() {
         bathrooms: '',
         longitude: '',
         latitude: '',
-        images: []
+        images: [],
+        open_house: false,
     });
     const [photoMain, setPhotoMain] = useState(null); 
     const [message, setMessage] = useState('');
@@ -83,7 +84,8 @@ function NewListing() {
                 bathrooms: '',
                 longitude: '',
                 latitude: '',
-                images: []
+                images: [],
+                open_house: false,
             });
 
             window.scrollTo(0, 0);
@@ -235,6 +237,19 @@ function NewListing() {
                                 multiple 
                                 onChange={handleImageChange} 
                                 required
+                            />
+                        </Form.Group>
+
+                        <Form.Group controlId="formOpenHouse">
+                            <Form.Check 
+                                type="checkbox" 
+                                label="Open House" 
+                                name="open_house" 
+                                checked={formData.open_house} 
+                                onChange={(e) => setFormData(prevState => ({
+                                    ...prevState,
+                                    open_house: e.target.checked
+                                }))} 
                             />
                         </Form.Group>
 
