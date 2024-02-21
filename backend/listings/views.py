@@ -429,3 +429,20 @@ class UserListingsView(APIView):
         listings = Listing.objects.filter(original_listing_person=request.user)
         serializer = ListingSerializer(listings, many=True)
         return Response(serializer.data)
+
+    def post(self, request):
+        data = request.data
+        print(request.data)
+        if data['slug'] is None:
+            return Response({"error": "Error deleting"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+       
+        try:  
+            listing = Listing.objects.get(slug=data['slug'], original_listing_person=request.user)
+        except:
+            return Response({'error': 'Listing not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        listing.delete()
+        listings = Listing.objects.filter(original_listing_person=request.user)
+        serializer = ListingSerializer(listings, many=True)
+        return Response(serializer.data)
+        #return Response({'success': 'Listing deleted successfully'})

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import { Container, Row, Col, Button } from 'react-bootstrap';
+import { Container, Row, Col, Button, Alert } from 'react-bootstrap';
 import Favourite from "../components/Favourite";
 import House from "../components/House";
 import { RiDeleteBin6Line } from "react-icons/ri";
@@ -9,6 +9,9 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 function ProfileScreen() {
     const [favs, setFavs] = useState([]);
     const [userHouses, setUserHouses] = useState([]);
+    const [successMessage, setSuccessMessage] = useState(null); 
+    const [errorMessage, setErrorMessage] = useState(null);
+
 
     const config = {
         headers: {
@@ -34,9 +37,25 @@ function ProfileScreen() {
         fetchFavs();
     }, []); 
 
+    const deleteHouse = async (houseSlug) => {
+        try {
+            const response  = await axios.post(`http://localhost:8000/api/listings/user-listings/`, { 'slug': houseSlug }, config);
+            setUserHouses(response.data);
+            setSuccessMessage('Listing deleted successfully.'); 
+            setErrorMessage(null);
+        } catch (error) {
+            console.error('Error: ', error);
+            setErrorMessage('Failed to delete listing.'); 
+            setSuccessMessage(null); 
+        }
+    }; 
+
     return (
         <>
             <Container className="mt-3">
+            {successMessage && <Alert variant="success">{successMessage}</Alert>} 
+            {errorMessage && <Alert variant="danger">{errorMessage}</Alert>} 
+                
             <Row>
                 {favs.length > 0 && (
                     <>
@@ -58,10 +77,11 @@ function ProfileScreen() {
                     <h3 className="text-center fw-bold">Your Listings</h3>
                 </Col>
                 {userHouses && userHouses.length > 0 && userHouses.map(house => (
-                    <Col key={house.id} xs={12} sm={6} md={4} lg={4} xl={4} className="position-relative"> {/* Adjust column sizing and ensure consistent layout */}
+                    <Col key={house.id} xs={12} sm={6} md={4} lg={4} xl={4} className="position-relative"> 
                         <RiDeleteBin6Line
                         className="delete-icon position-absolute top-0 end-0 m-2"
                         style={{ cursor: 'pointer', zIndex: 1,  fontSize: '32px' }}
+                        onClick={() => deleteHouse(house.slug)}
                         />
                         <House house={house} />
                     </Col>
