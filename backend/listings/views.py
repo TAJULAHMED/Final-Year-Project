@@ -445,4 +445,3 @@ class UserListingsView(APIView):
         listings = Listing.objects.filter(original_listing_person=request.user)
         serializer = ListingSerializer(listings, many=True)
         return Response(serializer.data)
-        #return Response({'success': 'Listing deleted successfully'})

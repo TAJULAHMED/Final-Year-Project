@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Container, Form, Row, Col, Button, Card } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Container, Form, Row, Col, Button } from 'react-bootstrap';
 import House from "../components/House";
-
+import { Link } from 'react-router-dom';
 
 function SearchScreen() {
     const [formData, setFormData] = useState({
@@ -16,17 +15,14 @@ function SearchScreen() {
         open_house: false,
         keywords: ''
     });
-    const [listings, setListings] = useState([]);
     const [houses, setHouses] = useState([]);
 
-    const userInfo = JSON.parse(localStorage.getItem('accessToken'))    
     const config = {
         headers: {
             'Content-Type': 'application/json',
         }, 
         withCredentials: true
     };
-
 
     const handleChange = (e) => {
         const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
@@ -40,14 +36,21 @@ function SearchScreen() {
         e.preventDefault();
         try {
             const response = await axios.post('http://localhost:8000/api/listings/search/', formData, config);
-            setListings(response.data); // Assuming the response data is the list of listings
-            console.log(formData)
-            console.log(response.data)
-            setHouses(response.data)
+            setHouses(response.data);
         } catch (error) {
             console.error('Error fetching search results:', error);
         }
     };
+
+    const fetchPersonalizedListings = async () => {
+        try {
+            const response = await axios.get('http://localhost:8000/api/listings/preflistings/', config);
+            setHouses(response.data);
+        } catch (error) {
+            console.error('Error fetching personalized listings:', error);
+        }
+    };
+
 
     return (
         <Container className="my-4">
@@ -139,27 +142,25 @@ function SearchScreen() {
                     </Col>
                 </Row>
                 <Row className="mb-3">
-                    <Col className="d-flex justify-content-center">
-                        <Button className='me-2' variant="primary" type="submit">Search</Button>
-                        <Link to='/all'>
-                            <Button>View All</Button>
-                        </Link>
-                    </Col>
-                </Row>
-
-                <Row className="mb-3">
-                    <Col className="d-flex justify-content-center">
-                    <Link to='/prefs'>
-                        <Button>Personalised investments for you</Button>
+                <Col className="d-flex justify-content-center">
+                    <Button className='me-2' variant="primary" type="submit">Search</Button>
+                    <Link to='/all'>
+                        <Button>View All</Button>
                     </Link>
-                    </Col>
-                </Row>
+                </Col>
+            </Row>
+
+            <Row className="mb-3">
+                <Col className="d-flex justify-content-center">
+                    <Button onClick={fetchPersonalizedListings}>Personalised investments for you</Button>
+                </Col>
+            </Row>
 
             </Form>
 
             <Row>
                 {houses.map(house => (
-                    <Col key={house.id} sm={12} md={12} lg={4} xl={7}>
+                    <Col key={house.id} sm={12} md={12} lg={4} xl={3}>
                         <House house={house} />
                     </Col>
                 ))}
