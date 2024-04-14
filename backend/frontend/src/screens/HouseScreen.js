@@ -41,12 +41,14 @@ function HouseScreen() {
                     {showFullDescription || house.description.length <= summaryLimit
                         ? house.description
                         : `${house.description.substring(0, summaryLimit)}... `}
-                    <span
-                        onClick={toggleDescription}
-                        style={{ cursor: 'pointer', color: '#007bff', textDecoration: 'underline' }}
-                    >
-                        {showFullDescription ? ' Show Less' : 'Read More'}
-                    </span>
+                    {house.description.length > summaryLimit && (
+                        <span
+                            onClick={toggleDescription}
+                            style={{ cursor: 'pointer', color: '#007bff', textDecoration: 'underline' }}
+                        >
+                            {showFullDescription ? ' Show Less' : 'Read More'}
+                        </span>
+                    )}
                 </>
             );
         }
@@ -66,6 +68,24 @@ function HouseScreen() {
                 <>
                     {descriptionContent}
                     {stationsList}
+                </>
+            );
+        }
+        if (house.schools && house.schools.length > 0) {
+            const schoolsList = (
+                <div style={{ marginTop: '20px' }}>
+                    <strong>Nearby Schools (1.5km):</strong>
+                    <ul>
+                        {house.schools.map((school, index) => (
+                            <li key={index}>{school.name}</li>
+                        ))}
+                    </ul>
+                </div>
+            );
+            descriptionContent = (
+                <>
+                    {descriptionContent}
+                    {schoolsList}
                 </>
             );
         }

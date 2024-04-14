@@ -18,7 +18,14 @@ class Station(models.Model):
 
     def __str__(self):
         return self.name
+    
+class School(models.Model):
+    name = models.CharField(max_length=200)
+    longitude = models.DecimalField(max_digits=15, decimal_places=11, blank=True, null=True)
+    latitude = models.DecimalField(max_digits=15, decimal_places=11, blank=True, null=True)
 
+    def __str__(self):
+        return self.name
 
 class Listing(models.Model):
     class ListingType(models.TextChoices):

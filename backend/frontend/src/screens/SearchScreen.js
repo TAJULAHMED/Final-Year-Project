@@ -160,7 +160,7 @@ function SearchScreen() {
 
             <Row>
                 {houses.map(house => (
-                    <Col key={house.id} sm={12} md={12} lg={4} xl={3}>
+                    <Col key={house.id} sm={12} md={12} lg={7} xl={7}>
                         <House house={house} />
                     </Col>
                 ))}

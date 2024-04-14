@@ -44,7 +44,7 @@ function App() {
       console.log(isLoggedIn)
       const interval = setInterval(() => {
         checkSession();
-      }, 60000); 
+      }, 5000); 
 
       return () => clearInterval(interval);
     }

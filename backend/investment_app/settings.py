@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'listings',
     'contacts',
     'forum',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
