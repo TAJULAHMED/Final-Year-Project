@@ -20,6 +20,8 @@ import PostScreen from './screens/PostScreen';
 import EditProfileScreen from './screens/EditProfileScreen';
 import HomePage from './screens/HomePage';
 import PersonalisedListingsScreen from './screens/PersonalisedListingsScreen';
+import HelpScreen from './screens/HelpScreen';
+
 import { logout } from './reducers/UserReducers';
 
 function App() {
@@ -56,7 +58,7 @@ function App() {
       <Routes>
         <Route path='/' element={<HomePage />} />
         <Route path='/all' element={<HomeScreen />} />
-        <Route path='/test' element={<ForumScreen />} />
+        <Route path='/help' element={<HelpScreen />} />
         <Route path='/prefs' element={<ProtectedRoute><PersonalisedListingsScreen /></ProtectedRoute>} />
         <Route path='/search' element={<ProtectedRoute><SearchScreen /></ProtectedRoute>} />
         <Route path='/editprofile' element={<ProtectedRoute><EditProfileScreen /></ProtectedRoute>} />

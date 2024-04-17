@@ -29,6 +29,9 @@ function Header() {
                                 <LinkContainer to="/search">
                                     <Nav.Link>Search</Nav.Link>
                                 </LinkContainer>
+                                <LinkContainer to="/help">
+                                    <Nav.Link>Help</Nav.Link>
+                                </LinkContainer>
                                 <NavDropdown title={user.name} id="basic-nav-dropdown">
                                     <LinkContainer to="/profile">
                                         <NavDropdown.Item>Profile</NavDropdown.Item>
@@ -53,6 +56,9 @@ function Header() {
                                 </LinkContainer>
                                 <LinkContainer to="/register">
                                     <Nav.Link>Register</Nav.Link>
+                                </LinkContainer>
+                                <LinkContainer to="/help">
+                                    <Nav.Link>Help</Nav.Link>
                                 </LinkContainer>
                             </>
                         )}
