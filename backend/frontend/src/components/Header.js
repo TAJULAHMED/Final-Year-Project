@@ -5,6 +5,7 @@ import { logout } from '../reducers/UserReducers';
 import { Navbar, Nav, NavDropdown, Container } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap'; 
 
+// Header to be at the top of all of the pages
 function Header() {
     const user = useSelector((state) => state.user);
     const dispatch = useDispatch();
@@ -41,9 +42,6 @@ function Header() {
                                         <NavDropdown.Item>Account details</NavDropdown.Item>
                                     </LinkContainer>
 
-                                    <LinkContainer to="/listings">
-                                        <NavDropdown.Item>My Listings</NavDropdown.Item>
-                                    </LinkContainer>
                                     <NavDropdown.Divider />
                                     <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
                                 </NavDropdown>

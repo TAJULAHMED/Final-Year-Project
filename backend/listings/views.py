@@ -15,6 +15,9 @@ from .ml.pred import make_prediction
 
 
 class FavView(APIView):
+    """
+    API to handle user favorites allowing for listing and removal of favorites
+    """
     def get(self, request):
         queryset = Favourite.objects.filter(user=request.user)
         serializer = FavouriteItemSerializer(queryset, many=True)
@@ -39,6 +42,9 @@ class FavView(APIView):
 
 
 class ListingsView(ListAPIView):
+    """
+    API to list all published listings with pagination
+    """
     queryset = Listing.objects.order_by('-list_date').filter(is_published=True)
     permission_classes = (permissions.AllowAny, ) # if error put comma after parameter
     serializer_class = ListingSerializer
@@ -46,6 +52,9 @@ class ListingsView(ListAPIView):
     lookup_field = 'slug'
 
 class ListingView(RetrieveAPIView):
+    """
+    API to retrieve a a single listing based on its slug
+    """
     queryset = Listing.objects.order_by('-list_date').filter(is_published=True)
     serializer_class = ListingDetailSerializer
     lookup_field = 'slug'
@@ -54,6 +63,9 @@ class ListingView(RetrieveAPIView):
         return {'request': self.request}
 
 class SearchView(APIView):
+    """
+    API  to search listings based on various filters like type, price, etc.
+    """
     permission_classes = (permissions.AllowAny, )
     serializer_class = ListingSerializer
 
@@ -206,6 +218,9 @@ class SearchView(APIView):
 
 
 class NewListingView(APIView):
+    """
+    API to create a new listing with geolocation data 
+    """
     def post(self, request):
         print(request.data)
 
@@ -221,11 +236,8 @@ class NewListingView(APIView):
                 result = response.json().get('result', {})
                 longitude = Decimal(result.get('longitude', 0)).quantize(Decimal('.00000000001'), rounding=ROUND_HALF_UP)
                 latitude = Decimal(result.get('latitude', 0)).quantize(Decimal('.00000000001'), rounding=ROUND_HALF_UP)
-
-
                 admin_district = result.get('admin_district')
                 admin_ward = result.get('admin_ward')
-
                 print(longitude, latitude, admin_district, admin_ward)
             else:
                 return Response({'error': 'Invalid postcode or API error'}, status=status.HTTP_400_BAD_REQUEST)
@@ -366,6 +378,9 @@ def get_bounding_box(latitude, longitude, radius):
     return (lat_min, lat_max, lon_min, lon_max)
 
 class PreferenceListings(APIView):
+    """
+    API to list listings based on userss investment preferences
+    """
     def get(self, request):
         
         user = request.user
@@ -389,6 +404,9 @@ class PreferenceListings(APIView):
 
 
 class PreferenceView(APIView): 
+    """
+    API to manage users investment preferences
+    """
     def get(self, request):
         user = request.user
         try:
@@ -425,6 +443,9 @@ class PreferenceView(APIView):
 
 
 class UserListingsView(APIView):
+    """
+    API to manage listings created by the user
+    """
     def get(self, request):
         listings = Listing.objects.filter(original_listing_person=request.user)
         serializer = ListingSerializer(listings, many=True)

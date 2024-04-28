@@ -4,6 +4,8 @@ import { Container, Form, Row, Col, Button } from 'react-bootstrap';
 import House from "../components/House";
 import { Link } from 'react-router-dom';
 
+// Screen to let the user filter what type of property they are looking for
+// They can view all properties and personalised properties as well
 function SearchScreen() {
     const [formData, setFormData] = useState({
         listing_type: 'Terraced',

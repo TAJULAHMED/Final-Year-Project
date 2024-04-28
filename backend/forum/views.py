@@ -6,6 +6,11 @@ from .serializers import PostSerializer, ReplySerializer, ReplyListSerializer
 from django.shortcuts import get_object_or_404
 
 class ForumView(APIView):
+    """
+    API that handles viewing all forum posts and creating a new forum post
+    Access is restricted to authenticated users
+    """
+
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
@@ -21,12 +26,21 @@ class ForumView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class PostDetailView(APIView):
+    """
+    API for handling requests for a single post detail
+    """
     def get(self, request, pk):
+        """
+        Retrieves a specific post by its primary key or returns a 404 if it doesnt exist
+        """
         post = get_object_or_404(Post, pk=pk)
         serializer = PostSerializer(post)
         return Response(serializer.data)
 
 class RepliesView(APIView):
+    """
+    API for handling viewing replies to a specific post and creating a new reply for a specific post
+    """
     def get(self, request, post_id):
         replies = Reply.objects.filter(post=post_id)
         serializer = ReplyListSerializer(replies, many=True)

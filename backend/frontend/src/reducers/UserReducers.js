@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit"; 
 
 const initialState = { name: '', email: '', loggedIn: false, verified: false, income: null, age: null, postcode: null, radius: null, deposit: null};
-
+// Slice for user data with handlers for login, logout, verification status, name changes, and preferences updates
 export const userSlice = createSlice({
     name: 'user',
     initialState,

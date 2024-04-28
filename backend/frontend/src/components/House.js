@@ -3,6 +3,7 @@ import { Card } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { FaBed, FaBath } from 'react-icons/fa';
 
+// Component to show the house with an image and description
 function House({ house }) {
     const imageUrl = house.photo_main && house.photo_main.startsWith('http')
         ? house.photo_main

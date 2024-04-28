@@ -6,6 +6,8 @@ import Favourite from "../components/Favourite";
 import House from "../components/House";
 import { RiDeleteBin6Line } from "react-icons/ri";
 
+// Profile screen to show the user their favourites and their listings
+// User can delete their favourits and their listings
 function ProfileScreen() {
     const [favs, setFavs] = useState([]);
     const [userHouses, setUserHouses] = useState([]);
@@ -23,11 +25,17 @@ function ProfileScreen() {
     useEffect(() => {
         async function fetchFavs() {
             try {
+                const startTime = Date.now()
                 const { data: favsData } = await axios.get(`http://localhost:8000/api/listings/favs/`, config); 
                 setFavs(favsData);
 
                 const { data: housesData } = await axios.get(`http://localhost:8000/api/listings/user-listings/`, config);
                 setUserHouses(housesData);
+                const endTime = Date.now()
+
+                const timeTaken = endTime - startTime
+                console.log(`API call took ${timeTaken}`)
+
 
             } catch (error) {
                 console.error('Error fetching the house details:', error);

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Container, Accordion, Card } from 'react-bootstrap';
 
+// Help screen that gives basic answers to problems
 function HelpScreen() {
     return (
         <Container className="my-5">

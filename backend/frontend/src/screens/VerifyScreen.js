@@ -4,7 +4,7 @@ import axios from 'axios';
 import { Form, Button, Alert, Container, Row, Col } from 'react-bootstrap';
 import { verified } from "../reducers/UserReducers";
 
-
+// Screen where the user has to input a code in order to verify their account
 function VerifyScreen() {
     const [code, setCode] = useState('');
     const [message, setMessage] = useState('');

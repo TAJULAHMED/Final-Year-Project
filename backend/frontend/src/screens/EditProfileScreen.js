@@ -5,6 +5,8 @@ import axios from "axios";
 import { namechange, preferences } from "../reducers/UserReducers";
 import { useSelector, useDispatch } from 'react-redux';
 
+// Screen to guve the user the ability to edit their profile
+// Shows their personal details and their investment preferences
 function EditProfileScreen() {
     const [name, setName] = useState('');
     const [currentPassword, setCurrentPassword] = useState('');

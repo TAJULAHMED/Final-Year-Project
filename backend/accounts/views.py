@@ -9,9 +9,16 @@ from django.contrib.auth.hashers import check_password
 from rest_framework.permissions import IsAuthenticated
 
 class SignupView(APIView):
+    """
+    API for user registrations
+    """
     permission_classes = (permissions.AllowAny, )
 
     def post(self, request, format=None):
+        """
+        Create a new user account using name, email and possowrd
+        Makes sure passwords mathc and meet the length requirement
+        """
         data = self.request.data
         name = data['name']
         email = data['email']
@@ -32,7 +39,17 @@ class SignupView(APIView):
             return Response({'error': 'Passwords do not match'})
         
 class UpdateUserProfile(APIView):
+    """
+    API for updating user profile
+    User needs to be authenticated before they can update
+    """
     def post(self, request):
+        """
+        Validates the current and new passwords for if they match
+        Checks if the password entered matches the current password
+        Checks if the new password meets the length required
+        Updates the password
+        """
         user = request.user
         data = request.data
         print(data)
@@ -69,6 +86,10 @@ class UpdateUserProfile(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 class MyTokenObtainPairView(TokenObtainPairView):
+    """
+    Custom view to obtain JWT token pair
+    Extends the TokenObtainPairView to set access token in HTTP only cookie
+    """
     serializer_class = MyTokenObtainPairSerializer
 
     def post(self, request, *args, **kwargs):

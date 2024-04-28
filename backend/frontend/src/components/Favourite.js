@@ -2,6 +2,7 @@ import React from "react";
 import { Card, Row, Col, Container } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
+// Component to show the users favourite properties
 function Favourite({ fav }) {
     return (
         <Container className="d-flex justify-content-center">

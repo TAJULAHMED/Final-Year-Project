@@ -4,7 +4,8 @@ import { Container, ListGroup, Button, Form, Row, Col } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import Post from '../components/Post';
 
-
+// Screen for the forum
+// Shows the different forum posts and allows them to click on them to see the replies
 function ForumScreen() {
     const [posts, setPosts] = useState([]);
     const [newPost, setNewPost] = useState({ title: '', content: '' });

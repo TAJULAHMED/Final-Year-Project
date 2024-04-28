@@ -4,7 +4,7 @@ import { Form, Button, Row, Col, Card, Container } from 'react-bootstrap'
 
 import axios from "axios";
 
-
+// Screen to allow the user to register, if they are already registered they can log in
 function RegisterScreen() {
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')

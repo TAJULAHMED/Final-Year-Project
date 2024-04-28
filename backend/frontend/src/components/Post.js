@@ -2,7 +2,7 @@ import React from "react";
 import { Card } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
-
+// Component for posting a message onto the forum
 function Post({ post }) {
     const replyCount = post.num_replies
     console.log(post)

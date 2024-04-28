@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Form, Button, Container, Row, Col, Spinner } from 'react-bootstrap';
 import axios from 'axios';
 
+// Component to show allow the user to upload a new listing
 function NewListing() {
     const [formData, setFormData] = useState({
         title: '',
@@ -52,6 +53,8 @@ function NewListing() {
         e.preventDefault();
         setIsLoading(true);
 
+        const startTime = Date.now();
+
         const uploadFormData = new FormData();
         Object.entries(formData).forEach(([key, value]) => {
             if (key !== 'images') {
@@ -69,6 +72,11 @@ function NewListing() {
 
         try {
             const response = await axios.post('http://localhost:8000/api/listings/newlisting/', uploadFormData, config);
+            const endTime = Date.now();
+            const timeTaken = endTime - startTime
+
+            console.log(`API call took ${timeTaken}`)
+
             console.log(response.data);
             setMessage(response.data.message);
             setFormData({

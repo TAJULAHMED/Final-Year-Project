@@ -10,6 +10,7 @@ function formatTimestamp(timestamp) {
     return `${formattedDate} ${formattedTime}`;
 }
 
+// Screen to show the post and the replies, allows the users to reply to the posts as well
 function PostScreen() {
     const [post, setPost] = useState({});
     const [replies, setReplies] = useState([]);
@@ -35,11 +36,9 @@ function PostScreen() {
 
     const fetchPostAndReplies = async () => {
         try {
-            // Fetch post details
             const postResponse = await axios.get(`http://localhost:8000/api/forum/${postId}/`, config);
             setPost(postResponse.data);
 
-            // Fetch replies for the post
             const repliesResponse = await axios.get(`http://localhost:8000/api/forum/${postId}/replies/`, config);
             setReplies(repliesResponse.data);
         } catch (error) {

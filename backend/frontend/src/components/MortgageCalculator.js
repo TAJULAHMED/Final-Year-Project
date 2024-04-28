@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 
+// Component for the morgage calculator
 function MortgageCalculator() {
     const [homeValue, setHomeValue] = useState('');
     const [downPayment, setDownPayment] = useState('');

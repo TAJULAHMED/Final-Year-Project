@@ -4,6 +4,7 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 
 mapboxgl.accessToken = 'pk.eyJ1IjoidGFqdWxhaG1lZCIsImEiOiJjbHNmcXh1MnUwZWVxMmlvdWs4a2lkc3k2In0.yBikMiA39mlGqE50rjW2uQ';
 
+// Component to show the map of where the house is located
 const MapboxMap = ({ longitude, latitude }) => {
 	const mapContainerRef = useRef(null);
 

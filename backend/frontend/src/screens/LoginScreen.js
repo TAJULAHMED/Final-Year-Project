@@ -6,7 +6,8 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import axios from "axios";
 
-
+// Login Screen, user enters details to log in
+// If they are not registered there is a link to the register
 function LoginScreen() {
 
     const [email, setEmail] = useState('')
@@ -67,10 +68,10 @@ function LoginScreen() {
                         <Form.Group controlId='email' className="mb-3">
                             <Form.Label>Email</Form.Label>
                             <Form.Control
-                                type='email'  // Change to 'email' type
-                                placeholder='Enter email'  // Update placeholder
-                                value={email}  // Change to email state variable
-                                onChange={(e) => setEmail(e.target.value)}  // Update to setEmail
+                                type='email'  
+                                placeholder='Enter email'  
+                                value={email}  
+                                onChange={(e) => setEmail(e.target.value)} 
                                 className="rounded-pill"
                             />
                         </Form.Group>

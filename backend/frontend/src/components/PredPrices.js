@@ -1,9 +1,24 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ReferenceLine, Label } from 'recharts';
 import { FaInfoCircle } from 'react-icons/fa'; 
 import { Row, Col, OverlayTrigger, Tooltip as BootstrapTooltip } from 'react-bootstrap';
 
+// Component which shows the user the predicted prices of the property they have chosen in a graph format
 function PredPrices({ predPrices, price }) {
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setWindowWidth(window.innerWidth);
+        };
+
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
+
     if (predPrices === null) {
         return null; 
     }
@@ -14,7 +29,6 @@ function PredPrices({ predPrices, price }) {
     }));
 
     const predValue = predPrices[Object.keys(predPrices)[0]]; 
-
     const percentageDifference = ((price - predValue) / predValue) * 100;
 
     let riskLabel = "";
@@ -49,62 +63,60 @@ function PredPrices({ predPrices, price }) {
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
-        fontSize: '0.7em', 
+        fontSize: '1em',
     };
 
     return (
         <Row>
-            <Col xs={12} md={6}>
-                <LineChart
-                    width={600} 
-                    height={400}
-                    data={data}
-                    margin={{ top: 20, right: 30, left: 30, bottom: 20 }}
-                >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="year">
-                        <Label value="Year" position="bottom" offset={0} />
-                    </XAxis>
-                    <YAxis>
-                        <Label
-                            value="Predicted Price"
-                            angle={-90}
-                            position="insideLeft"
-                            dx={-25}
-                            dy={40}
-                        />
-                    </YAxis>
-                    <Tooltip />
-                    <Line type="monotone" dataKey="value" stroke="#8884d8" />
-                    <ReferenceLine y={price} stroke="red">
-                        <Label
-                            value={`Listed Price (${riskLabel})`}
-                            position="insideTopRight"
-                            angle={0}
-                            dy={-20}
-                            fill="red"
-                            fontSize={12}
-                        />
-                    </ReferenceLine>
-                </LineChart>
+            <Col xs={12}>
+                <div style={{ width: '100%', minHeight: '400px' }}>
+                    <LineChart
+                        width={windowWidth > 768 ? 600 : windowWidth - 30} 
+                        height={400}
+                        data={data}
+                        margin={{ top: 5, right: 20, left: 10, bottom: 5 }}
+                    >
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="year">
+                            <Label value="Year" position="bottom" offset={0} />
+                        </XAxis>
+                        <YAxis>
+                            <Label
+                                value="Predicted Price"
+                                angle={-90}
+                                position="insideLeft"
+                                dx={-25}
+                                dy={40}
+                            />
+                        </YAxis>
+                        <Tooltip />
+                        <Line type="monotone" dataKey="value" stroke="#8884d8" />
+                        <ReferenceLine y={price} stroke="red">
+                            <Label
+                                value={`Listed Price (${riskLabel})`}
+                                position="insideTopRight"
+                                angle={0}
+                                dy={-20}
+                                fill="red"
+                                fontSize={12}
+                            />
+                        </ReferenceLine>
+                    </LineChart>
+                </div>
             </Col>
-            <Col xs={12} md={12} lg={12} xl={6}>
-                <Row>
-                    <Col>
-                        <div>
-                            <p className="font-weight-bold" style={{ fontSize: '1.6em' }}>
-                                Price: <span style={{ color: textColor }}>£{price}</span>
-                                <OverlayTrigger placement="right" overlay={cautionMessage}>
-                                    <button style={infoButtonStyle}>
-                                        <FaInfoCircle />
-                                    </button>
-                                </OverlayTrigger>
-                            </p>
-                            <p style={{ fontSize: '1.2em' }}>Risk: <span style={{ color: textColor }}>{riskLabel}</span></p>
-                            <p>{riskText}</p> 
-                        </div>
-                    </Col>
-                </Row>
+            <Col xs={12}>
+                <div>
+                    <p className="font-weight-bold" style={{ fontSize: '1.6em', marginTop: '20px' }}>
+                        Price: <span style={{ color: textColor }}>£{price}</span>
+                        <OverlayTrigger placement="right" overlay={cautionMessage}>
+                            <button style={infoButtonStyle}>
+                                <FaInfoCircle />
+                            </button>
+                        </OverlayTrigger>
+                    </p>
+                    <p style={{ fontSize: '1.2em' }}>Risk: <span style={{ color: textColor }}>{riskLabel}</span></p>
+                    <p>{riskText}</p> 
+                </div>
             </Col>
         </Row>
     );

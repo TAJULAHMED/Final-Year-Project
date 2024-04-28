@@ -8,7 +8,8 @@ import PredPrices from "../components/PredPrices";
 import { useSelector, useDispatch } from 'react-redux';
 import MapboxMap from "../components/MapboxMap";
 
-
+// Screen to show all of the details about a house
+// Puts together different components to make the screen
 function HouseScreen() {
     const { slug } = useParams();
     const [house, setHouse] = useState([]);

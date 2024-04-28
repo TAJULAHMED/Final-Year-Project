@@ -5,6 +5,7 @@ import House from "../components/House";
 
 const PAGE_SIZE = 3;
 
+// Screen to show all of the houses, uses pagination 
 function HomeScreen() {
     const [houses, setHouses] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);

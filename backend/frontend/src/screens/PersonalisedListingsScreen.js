@@ -3,6 +3,8 @@ import axios from 'axios';
 import { Container, Row, Col } from 'react-bootstrap';
 import House from "../components/House";
 
+// Screen to show the user their personalised listings
+// This is worked out by their investment preferences
 function PersonalisedListingsScreen() {
     const [houses, setHouses] = useState([]);
 

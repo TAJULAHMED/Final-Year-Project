@@ -3,6 +3,8 @@ import { Container, Accordion, Button, Row, Col, Card } from 'react-bootstrap';
 import image from '../assets/HomeImage.jpg';
 import { Link } from 'react-router-dom';
 
+// This is the home page and the first screen the user should see
+// Gives brief information and allows the user to navigate through the site
 const HomePage = () => {
     return (
         <div>
