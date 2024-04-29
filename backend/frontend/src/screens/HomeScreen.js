@@ -29,6 +29,7 @@ function HomeScreen() {
 
     const handlePageChange = (newPage) => {
         setCurrentPage(newPage);
+        window.scrollTo(0, 0);
     };
 
     // Generate an array of page numbers
