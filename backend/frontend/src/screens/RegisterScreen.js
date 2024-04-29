@@ -19,11 +19,7 @@ function RegisterScreen() {
         e.preventDefault()
         console.log("Submitted")
 
-        const config = {
-            headers:{
-                'Content-type' : 'application/json',
-            }
-        }
+        
 
         if (password != password2){
             setError("Passwords do not match")
@@ -35,7 +31,7 @@ function RegisterScreen() {
                     'email': email, 
                     'password': password,
                     'password2': password2
-                }, config)
+                })
 
                 if (data && data.error) {
                     setError(data.error)
