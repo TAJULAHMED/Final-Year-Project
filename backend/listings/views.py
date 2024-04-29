@@ -421,6 +421,8 @@ class PreferenceView(APIView):
         user = request.user
         data = request.data
 
+        print(data)
+
         postcode = data['postcode']
         longitude = 51.5235  
         latitude = 0.0330
@@ -439,14 +441,16 @@ class PreferenceView(APIView):
             if data[key] == '':
                 return Response({'error': 'Fill in all the fields'}, status=status.HTTP_400_BAD_REQUEST)
 
-        preference, created = InvestmentPreference.objects.get_or_create(user=user)
-        if created or not created:
-            preference.deposit = data['deposit']
-            preference.annual_income = data['annual_income']
-            preference.longitude = longitude
-            preference.latitude = latitude
-            preference.radius = data['radius']
-            preference.save()
+        preference, created = InvestmentPreference.objects.get_or_create(
+        user=user,
+        defaults={
+            'deposit': data.get('deposit', 0),  
+            'annual_income': data.get('annual_income', 0),
+            'longitude': longitude,
+            'latitude': latitude,
+            'radius': data.get('radius', 0)
+        }
+    )
 
         serializer = InvestmentPreferenceSerializer(preference, data=data, partial=True)
         if serializer.is_valid():
