@@ -71,6 +71,7 @@ function EditProfileScreen() {
     const submitInvestmentHandler = async (e) => {
         e.preventDefault();
         try {
+            console.log(age, annualIncome, postcode)
             const response = await axios.post(
                 'http://localhost:8000/api/listings/preferences/',
                 {

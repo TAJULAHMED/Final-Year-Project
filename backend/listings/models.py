@@ -87,7 +87,7 @@ class Favourite(models.Model):
 
 class InvestmentPreference(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    age = models.IntegerField()
+    age = models.IntegerField(null=True, blank=True)
     deposit = models.DecimalField(max_digits=15, decimal_places=2)
     annual_income = models.DecimalField(max_digits=15, decimal_places=2)
     postcode = models.CharField(max_length=10)

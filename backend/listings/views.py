@@ -421,25 +421,40 @@ class PreferenceView(APIView):
         user = request.user
         data = request.data
 
+        postcode = data['postcode']
+        longitude = 51.5235  
+        latitude = 0.0330
+
+        if postcode:
+            api_url = f'http://api.postcodes.io/postcodes/{postcode}'
+            response = requests.get(api_url)
+            if response.status_code == 200:
+                result = response.json().get('result', {})
+                longitude = Decimal(result.get('longitude')).quantize(Decimal('.00000000001'), rounding=ROUND_HALF_UP)
+                latitude = Decimal(result.get('latitude')).quantize(Decimal('.00000000001'), rounding=ROUND_HALF_UP)
+            else:
+                return Response({'error': 'Invalid postcode or API error'}, status=status.HTTP_400_BAD_REQUEST)
+
         for key in data:
             if data[key] == '':
                 return Response({'error': 'Fill in all the fields'}, status=status.HTTP_400_BAD_REQUEST)
 
         preference, created = InvestmentPreference.objects.get_or_create(user=user)
+        if created or not created:
+            preference.deposit = data['deposit']
+            preference.annual_income = data['annual_income']
+            preference.longitude = longitude
+            preference.latitude = latitude
+            preference.radius = data['radius']
+            preference.save()
+
         serializer = InvestmentPreferenceSerializer(preference, data=data, partial=True)
-        
         if serializer.is_valid():
-            validated_data = serializer.validated_data
-            print(validated_data)
-
-            validated_data['longitude'] = 0.1234
-            validated_data['latitude'] = 0.5678
             serializer.save()
-
-            return Response({'success': 'successfully updated preferences'})
+            return Response({'success': 'Successfully updated preferences'})
         else:
-            return Response({'error': 'error, please make sure all fields are filled'})
-            
+            return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 class UserListingsView(APIView):

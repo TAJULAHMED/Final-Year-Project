@@ -19,6 +19,11 @@ export const userSlice = createSlice({
             state.email = initialState.email;
             state.loggedIn = initialState.loggedIn
             state.verified = initialState.verified;
+            state.income = initialState.income;
+            state.age = initialState.age;
+            state.postcode = initialState.postcode;
+            state.radius = initialState.radius;
+            state.deposit = initialState.deposit;
         },
         verified: (state, action) => {
             state.verified = action.payload
